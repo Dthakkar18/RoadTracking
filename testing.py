@@ -61,7 +61,7 @@ while True:
     edges = cv2.Canny(image=img_blur, threshold1=100, threshold2=200)
 
     #showing the output
-    #cv2.imshow("image", img)
+    cv2.imshow("Regular Image", img)
     #cv2.imshow("mask_image", mask_grey)
     cv2.imshow("Contour Lingings", output)
     cv2.imshow("Canny Edge Detection Lingings", edges)

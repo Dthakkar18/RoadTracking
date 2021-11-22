@@ -15,15 +15,15 @@ for s in streams:
     print("")
 
 #webcame = cv2.VideoCapture(0)
-capture = cv2.VideoCapture(best_vid.url)
+#capture = cv2.VideoCapture(best_vid.url)
 
 
 while True:
     #_, img = webcame.read()
-    _, img = capture.read()
+    #_, img = capture.read()
 
     #reading an image
-    #img = cv2.imread('road.jpg')
+    img = cv2.imread('road.jpg')
     #img = cv2.imread('fullTrack.jpg')
     #img = cv2.imread('raceTrack.jpg')
 
