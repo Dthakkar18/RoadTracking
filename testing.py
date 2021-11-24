@@ -1,29 +1,24 @@
 #testing obj detection with similar color
 import cv2
 import numpy as np
-import pafy #used for running youtube video but isnt working 
+import pafy #used for running youtube video 
 
-#create Video
-url = 'https://www.youtube.com/watch?v=Gbod4z8LHQ4'
+#create video to be able to pass into VideoCapture()
+url = 'https://www.youtube.com/watch?v=XVd_wmYYe8E'
 video = pafy.new(url)
-best_vid = video.getbest() #should be adding a parameter preftype='webm'
-
-#trying to see if there is the webm extention bc needed for 
-streams = video.streams
-for s in streams:
-    print(s.resolution, s.extension)
-    print("")
+best_vid = video.getbest(preftype="mp4")
 
 #webcame = cv2.VideoCapture(0)
-#capture = cv2.VideoCapture(best_vid.url)
+capture = cv2.VideoCapture(best_vid.url)
 
 
 while True:
+    #choose capture or webcame
     #_, img = webcame.read()
-    #_, img = capture.read()
+    _, img = capture.read()
 
-    #reading an image
-    img = cv2.imread('road.jpg')
+    #choose image to read
+    #img = cv2.imread('road.jpg')
     #img = cv2.imread('fullTrack.jpg')
     #img = cv2.imread('raceTrack.jpg')
 
@@ -55,23 +50,22 @@ while True:
     output = cv2.drawContours(combine_img, contours, -1, (0, 0, 255), 3)
     
     #blur img for better resutls
-    img_blur = cv2.GaussianBlur(mask_grey, (3,3), 0) #using Canny on grey mask, idk if combined better?
+    img_blur = cv2.GaussianBlur(mask_grey, (3,3), 0)
 
     #Canny edge detection
     edges = cv2.Canny(image=img_blur, threshold1=100, threshold2=200)
 
-    #showing the output
-    cv2.imshow("Regular Image", img)
+    #Choose which output to show
+    #cv2.imshow("Regular Image", img)
     #cv2.imshow("mask_image", mask_grey)
-    cv2.imshow("Contour Lingings", output)
+    #cv2.imshow("Contour Lingings", output)
     cv2.imshow("Canny Edge Detection Lingings", edges)
 
-
-
-    if cv2.waitKey(1) & 0xFF == ord('Q'): #image window will be opened until any key is pressed
+    #press shift+Q to exit
+    if cv2.waitKey(1) & 0xFF == ord('Q'):
         break
 
 #webcame.release()
-#capture.release()
+capture.release()
 
 
