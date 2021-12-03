@@ -3,13 +3,8 @@ import cv2
 import numpy as np
 import pafy #used for running youtube video 
 
-#create video to be able to pass into VideoCapture()
-url = 'https://www.youtube.com/watch?v=XVd_wmYYe8E'
-video = pafy.new(url)
-best_vid = video.getbest(preftype="mp4")
-
 #webcame = cv2.VideoCapture(0)
-capture = cv2.VideoCapture(best_vid.url)
+capture = cv2.VideoCapture('kart_video.mp4')
 
 
 while True:
@@ -47,7 +42,7 @@ while True:
     #finding contours for mask img (similar to finding edges)
     contours, hierarchy = cv2.findContours(mask_grey.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     #draws contour on combined img
-    output = cv2.drawContours(combine_img, contours, -1, (0, 0, 255), 3)
+    contourOutput = cv2.drawContours(combine_img, contours, -1, (0, 0, 255), 3)
     
     #blur img for better resutls
     img_blur = cv2.GaussianBlur(mask_grey, (3,3), 0)
@@ -55,11 +50,18 @@ while True:
     #Canny edge detection
     edges = cv2.Canny(image=img_blur, threshold1=100, threshold2=200)
 
+    #Combining canny edge with reg img
+    redImg = np.zeros(img.shape, img.dtype)
+    redImg[:,:] = (0, 0, 255)
+    redMask = cv2.bitwise_and(redImg, redImg, mask=edges)
+    overlayImg = cv2.addWeighted(redMask, 1, img, 1, 0)
+
     #Choose which output to show
     #cv2.imshow("Regular Image", img)
     #cv2.imshow("mask_image", mask_grey)
-    #cv2.imshow("Contour Lingings", output)
-    cv2.imshow("Canny Edge Detection Lingings", edges)
+    #cv2.imshow("Contour Lingings", contourOutput)
+    #cv2.imshow("Canny Edge Detection Lingings", edges)
+    cv2.imshow("Blended", overlayImg)
 
     #press shift+Q to exit
     if cv2.waitKey(1) & 0xFF == ord('Q'):
